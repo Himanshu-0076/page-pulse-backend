@@ -4,7 +4,7 @@
   "outputDirectory": "client/dist",
   "installCommand": "npm install && npm --prefix server install && npm --prefix client install",
   "functions": {
-    "server/src/api/index.js": {
+    "src/api/index.js": {
       "memory": 512,
       "maxDuration": 30
     }
