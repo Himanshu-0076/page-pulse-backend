@@ -2,7 +2,7 @@
   "name": "page-pulse-server",
   "version": "1.0.0",
   "description": "PagePulse Express API backend for web page & SEO auditing",
-  "main": "src/server.js",
+  "main": "node src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
