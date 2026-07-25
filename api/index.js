@@ -3,6 +3,6 @@
 // Vercel automatically routes all /api/* requests here via vercel.json.
 
 require('dotenv').config();
-const app = require('../app');
+const app = require('../src/app');
 
 module.exports = app;
