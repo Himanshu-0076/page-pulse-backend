@@ -8,19 +8,20 @@ const { startTimer } = require('../utils/measureTime');
  */
 async function fetchPage(url) {
   const getTimer = startTimer();
-  
+
   try {
     const response = await httpClient.get(url, {
       responseType: 'text',
-      // Validate status code range (allow 2xx and 3xx)
-      validateStatus: (status) => status >= 200 && status < 400
+      // Accept ALL status codes — even 4xx/5xx pages have auditable HTML.
+      // The status code is passed through to the audit report.
+      validateStatus: () => true
     });
 
     const responseTimeMs = getTimer();
     const contentType = (response.headers['content-type'] || '').toLowerCase();
 
-    // Verify response is HTML
-    if (contentType && !contentType.includes('text/html') && !contentType.includes('application/xhtml+xml')) {
+    // Verify response is HTML (skip check for error status pages — they may still return HTML)
+    if (response.status < 400 && contentType && !contentType.includes('text/html') && !contentType.includes('application/xhtml+xml')) {
       const err = new Error(`Target URL returned non-HTML content (${contentType.split(';')[0] || contentType})`);
       err.status = 400;
       throw err;
@@ -39,7 +40,7 @@ async function fetchPage(url) {
     };
   } catch (error) {
     const responseTimeMs = getTimer();
-    
+
     if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
       const err = new Error('Target server request timed out.');
       err.status = 504;
